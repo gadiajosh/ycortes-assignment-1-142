@@ -166,12 +166,12 @@ char *lsh_read_line(void)
     position++;
 
     // If we have exceeded the buffer, reallocate.
-    if (position >= bufsize) {
+     /*if (position >= bufsize) {
       bufsize += LSH_RL_BUFSIZE;
       buffer = realloc(buffer, bufsize);
       if (!buffer) {
         fprintf(stderr, "lsh: allocation error\n");
-        exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE); */
       }
     }
   }
