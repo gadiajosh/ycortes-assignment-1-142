@@ -60,7 +60,7 @@ int lsh_cd(char **args)
 int lsh_help(char **args)
 {
   int i;
-  printf("Stephen Brennan's LSH\n");
+  printf("CMPE 142 - Assignment 1 Spring 2019\n");
   printf("Type program names and arguments, and hit enter.\n");
   printf("The following are built in:\n");
 
@@ -68,7 +68,7 @@ int lsh_help(char **args)
     printf("  %s\n", builtin_str[i]);
   }
 
-  printf("Use the man command for information on other programs.\n");
+
   return 1;
 }
 
@@ -101,7 +101,7 @@ int lsh_launch(char **args)
     exit(EXIT_FAILURE);
   } else if (pid < 0) {
     // Error forking
-    perror("lsh");
+    perror("fork failed\n");
   } else {
     // Parent process
     do {
@@ -142,40 +142,11 @@ int lsh_execute(char **args)
  */
 char *read_line(void)
 {
-  int size_of_buf = BUFSIZE;
-  int pos = 0;
-  char *buff = malloc(sizeof(char) * size_of_buf);
-  int x;
-
-  if (!buff) {
-    fprintf(stderr, "allocation error\n");
-    exit(EXIT_FAILURE);
+  char *line = NULL;
+  ssize_t bufsize = 0; // have getline allocate a buffer for us
+  getline(&line, &bufsize, stdin);
+  return line;
   }
-
-  while (1) {
-    // Read a character
-     x= getchar();
-
-    // If we hit EOF, replace it with a null character and return.
-    if (x == EOF || x == '\n') {
-      buff[pos] = '\0';
-      return buff;
-    } else {
-      buffer[position] = c;
-    }
-    position++;
-
-    // If we have exceeded the buffer, reallocate.
-     /*if (position >= bufsize) {
-      bufsize += LSH_RL_BUFSIZE;
-      buffer = realloc(buffer, bufsize);
-      if (!buffer) {
-        fprintf(stderr, "lsh: allocation error\n");
-        exit(EXIT_FAILURE); */
-      }
-    }
-  }
-}
 
 #define LSH_TOK_BUFSIZE 64
 #define LSH_TOK_DELIM " \t\r\n\a"
@@ -184,7 +155,7 @@ char *read_line(void)
    @param line The line.
    @return Null-terminated array of tokens.
  */
-char **lsh_split_line(char *line)
+char **split_line(char *line)
 {
   int bufsize = LSH_TOK_BUFSIZE, position = 0;
   char **tokens = malloc(bufsize * sizeof(char*));
@@ -218,16 +189,16 @@ char **lsh_split_line(char *line)
 /**
    @brief Loop getting input and executing it.
  */
-void lsh_loop(void)
+void shell_loop(void)
 {
   char *line;
   char **args;
   int status;
 
   do {
-    printf("> ");
+    printf("CMPE142_1> ");
     line = read_line(); 
-    args = lsh_split_line(line);
+    args = split_line(line);
     status = lsh_execute(args);
 
     free(line);
@@ -246,7 +217,7 @@ int main(int argc, char **argv)
   // Load config files, if any.
 
   // Run command loop.
-  lsh_loop();
+  shell_loop();
 
   // Perform any shutdown/cleanup.
 
