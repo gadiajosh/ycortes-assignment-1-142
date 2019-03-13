@@ -196,6 +196,7 @@ void shell_loop(void)
   int status;
 
   do {
+    printf("Hello World");
     printf("CMPE142_1> ");
     line = read_line(); 
     args = split_line(line);
